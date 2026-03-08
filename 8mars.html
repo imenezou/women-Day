@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joyeux 8 Mars</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose: #c94f6e;
+    --rose-light: #f0a8b8;
+    --rose-pale: #fde8ef;
+    --gold: #c9924f;
+    --cream: #fdf6f0;
+    --dark: #1a1018;
+    --mauve: #7a3b5c;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--cream);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--rose-light);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, background 0.3s;
+    mix-blend-mode: screen;
+  }
+  .cursor-trail {
+    width: 32px; height: 32px;
+    border: 1px solid var(--rose-light);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease, opacity 0.3s;
+    opacity: 0.4;
+    mix-blend-mode: screen;
+  }
+
+  /* Background canvas */
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* Grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+  }
+
+  /* =========== HERO =========== */
+  .hero {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .date-badge {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--rose-light);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 12vw, 9rem);
+    line-height: 0.9;
+    font-weight: 700;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.6s forwards;
+    position: relative;
+  }
+
+  .hero-title em {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--rose-light);
+    font-size: 0.85em;
+    line-height: 1;
+  }
+
+  .hero-title span {
+    display: block;
+    background: linear-gradient(135deg, var(--rose) 0%, var(--gold) 60%, var(--rose-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    margin-top: 2.5rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(253, 246, 240, 0.7);
+    max-width: 560px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1s forwards;
+  }
+
+
+  /* =========== PETALS =========== */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    animation: petalFall linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes petalFall {
+    0%   { transform: translateY(-60px) rotate(0deg) translateX(0); opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(110vh) rotate(720deg) translateX(60px); opacity: 0; }
+  }
+
+  
+  /* Floating decorative line */
+  .deco-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rose) 30%, var(--gold) 50%, var(--rose) 70%, transparent);
+    opacity: 0.25;
+  }
+
+  /* =========== ANIMATIONS =========== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; height: 50px; }
+    50% { opacity: 0.3; height: 30px; }
+  }
+
+  /* =========== RESPONSIVE =========== */
+  @media (max-width: 640px) {
+    .message-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .message-big { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursor-trail"></div>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- Hero -->
+<section class="hero">
+  <p class="date-badge">8 mars · Journée internationale des droits des femmes</p>
+  <h1 class="hero-title">
+    <em>Joyeux</em>
+    <span>8 Mars</span>
+  </h1>
+  <p class="hero-subtitle">À toutes les femmes.</p>
+</section>
+
+
+<script>
+
+// Background canvas: floating orbs
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, orbs = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const colors = ['#c94f6e','#7a3b5c','#c9924f','#f0a8b8','#3d1a2e'];
+for (let i = 0; i < 7; i++) {
+  orbs.push({
+    x: Math.random() * 1200 - 100,
+    y: Math.random() * 900 - 100,
+    r: 150 + Math.random() * 250,
+    vx: (Math.random() - 0.5) * 0.18,
+    vy: (Math.random() - 0.5) * 0.18,
+    color: colors[i % colors.length],
+    opacity: 0.08 + Math.random() * 0.1
+  });
+}
+
+function drawBg() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#1a1018';
+  ctx.fillRect(0, 0, W, H);
+  for (const o of orbs) {
+    o.x += o.vx; o.y += o.vy;
+    if (o.x < -o.r) o.x = W + o.r;
+    if (o.x > W + o.r) o.x = -o.r;
+    if (o.y < -o.r) o.y = H + o.r;
+    if (o.y > H + o.r) o.y = -o.r;
+    const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+    g.addColorStop(0, o.color + 'AA');
+    g.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// Falling petals
+function createPetal() {
+  const el = document.createElement('div');
+  el.className = 'petal';
+  const size = 8 + Math.random() * 14;
+  const colors = ['#c94f6e','#f0a8b8','#c9924f','#fde8ef','#7a3b5c'];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  el.style.cssText = `
+    left: ${Math.random() * 100}vw;
+    top: -60px;
+    width: ${size}px;
+    height: ${size * 0.7}px;
+    background: ${color};
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation-duration: ${6 + Math.random() * 8}s;
+    animation-delay: ${Math.random() * 4}s;
+  `;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 15000);
+}
+setInterval(createPetal, 600);
+for (let i = 0; i < 8; i++) setTimeout(createPetal, i * 200);
+
+
+</script>
+</body>
+</html>
